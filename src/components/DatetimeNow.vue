@@ -12,7 +12,7 @@ import { defineComponent } from 'vue';
 
 export default defineComponent({
     name: 'DatetimeNow',
-    data() {
+    data(){
         return{
             currentDate: '',
             currentTime: [] as string[],
@@ -39,6 +39,7 @@ export default defineComponent({
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 .datetime-now{
+    margin-bottom: 30px;
     &__date{
         margin-bottom: 30px;
         font-size: 65px;
@@ -55,7 +56,7 @@ export default defineComponent({
         }
     }
 
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: 768px){
         &__date{
             margin-bottom: 30px;
             font-size: 24px;

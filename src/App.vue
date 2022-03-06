@@ -1,6 +1,10 @@
 <template>
     <div class="container">
         <DatetimeNow />
+        <div class="weather-calendar">
+            <WeatherForecast />
+            <MonthlyCalendar />
+        </div>
     </div>
 </template>
 
@@ -8,11 +12,15 @@
 import { defineComponent } from 'vue';
 import '../src/assets/css/reset.css'
 import DatetimeNow from './components/DatetimeNow.vue';
+import WeatherForecast from './components/WeatherForecast.vue';
+import MonthlyCalendar from './components/MonthlyCalendar.vue';
 
 export default defineComponent({
     name: 'App',
     components: {
         DatetimeNow,
+        WeatherForecast,
+        MonthlyCalendar
     }
 });
 </script>
@@ -25,10 +33,13 @@ export default defineComponent({
     color: #fff;
 }
 html{
-    background: #000;
+    background: #222;
 }
 .container{
     padding: 60px 30px 50px;
     margin: 0 auto;
+}
+.weather-calendar{
+    display: flex;
 }
 </style>

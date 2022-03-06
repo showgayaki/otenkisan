@@ -1,0 +1,14 @@
+{
+    "max": "13℃[-5]",
+    "min": "5℃[0]",
+    "state": "晴れ",
+    "max-diff": "",
+    "min-diff": "",
+    "icon": "https://s.yimg.jp/images/weather/general/next/size150/100_night.png",
+    "rainy-percent": [
+        "---",
+        "---",
+        "---",
+        "0％"
+    ]
+}
