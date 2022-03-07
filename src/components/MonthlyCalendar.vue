@@ -14,7 +14,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import holidaysDate from '../assets/json/holiday.json';
 
 export default defineComponent({
-    name: 'MontylyCalendar',
+    name: 'MonthlyCalendar',
     components: {
         FullCalendar,
     },
@@ -42,15 +42,12 @@ export default defineComponent({
         }
     },
     methods: {
-        getHoliday(holidaysDate: string[]){
+        getHoliday(holidaysDate: {[index: string]: string}){
             let events = [];
             let holidays: string[] = Object.keys(holidaysDate);
-            console.log(holidays)
             for(let i = 0; i < holidays.length; i++){
-                let title = holidays[i];
                 let holiday = {
-                    // title: holidaysDate[holidays[i]],
-                    title: '祝日',
+                    title: holidaysDate[holidays[i]],
                     start: holidays[i],
                     className: 'holiday',
                     holiday: holidays[i],
@@ -96,9 +93,9 @@ export default defineComponent({
     background-color: lightgray;
 }
 .fc-event-title{
-    display: block!important;
+    width: 100%;
     background: #DC143C;
-    font-size: .9rem;
+    font-size: .9em;
     font-weight: bold;
     text-align: center;
 }
