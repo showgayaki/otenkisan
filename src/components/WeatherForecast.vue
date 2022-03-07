@@ -44,22 +44,6 @@ export default defineComponent({
             weatherForecast: weatherForecast,
         }
     },
-    mounted: function(){
-        this.splitTemperture();
-    },
-    methods: {
-        splitTemperture(){
-            let tempMax = this.weatherForecast['max'].split('℃')[0];
-            let tempMaxDiff = '℃' + this.weatherForecast['max'].split('℃')[1];
-            this.weatherForecast['max'] = tempMax;
-            this.weatherForecast['max-diff'] = tempMaxDiff;
-
-            let tempMin = this.weatherForecast['min'].split('℃')[0];
-            let tempMinDiff = '℃' + this.weatherForecast['min'].split('℃')[1];
-            this.weatherForecast['min'] = tempMin;
-            this.weatherForecast['min-diff'] = tempMinDiff;
-        }
-    }
 });
 </script>
 
@@ -96,11 +80,17 @@ export default defineComponent({
         width: 3em;
     }
     &__degree{
-        width: 3rem;
+        width: 6rem;
         display: inline-block;
-        font-size: 34px;
+        font-size: 36px;
         font-weight: bold;
         text-align: right;
+        &::after{
+            display: inline-block;
+            content: "℃";
+            margin: 0 8px;
+            font-size: 27px;
+        }
     }
     &__table{
         width: 100%;
