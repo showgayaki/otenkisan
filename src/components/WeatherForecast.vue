@@ -3,25 +3,25 @@
         <div class="weather-forecast__forecast">
             <div class="weather-forecast__sky-pattern">
                 <img v-bind:src="weatherForecast['icon']" class="weather-forecast__icon" alt="天気アイコン">
-                <p class="weather-forecast__state">{{ weatherForecast['state']}}</p>
+                <p class="weather-forecast__state">{{ weatherForecast['state'] }}</p>
             </div>
             <div class="weather-forecast__temp-wrap">
                 <p class="weather-forecast__temp weather-forecast__temp--max">
                     <span class="weather-forecast__temp-text">最高</span>
-                    <span class="weather-forecast__degree">{{ weatherForecast['max']}}</span>
-                    <span class="weather-forecast__temp-text">{{ weatherForecast['max-diff']}}</span>
+                    <span class="weather-forecast__degree">{{ weatherForecast['max'] }}</span>
+                    <span class="weather-forecast__temp-text">{{ weatherForecast['max-diff'] }}</span>
                 </p>
                 <p class="weather-forecast__temp weather-forecast__temp--min">
                     <span class="weather-forecast__temp-text">最低</span>
-                    <span class="weather-forecast__degree"> {{ weatherForecast['min']}}</span>
-                    <span class="weather-forecast__temp-text">{{ weatherForecast['min-diff']}}</span>
+                    <span class="weather-forecast__degree"> {{ weatherForecast['min'] }}</span>
+                    <span class="weather-forecast__temp-text">{{ weatherForecast['min-diff'] }}</span>
                 </p>
             </div>
         </div>
         <table class="weather-forecast__table">
             <thead>
                 <tr>
-                    <th class="weather-forecast__table-header">0-6</th><th class="weather-forecast__table-header">6-12</th><th class="weather-forecast__table-header">12-18</th><th class="weather-forecast__table-header">18-24</th>
+                    <th v-for="span in timeSpan" :key="span" class="weather-forecast__table-header">{{ span }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -41,9 +41,15 @@ export default defineComponent({
     name: 'WeatherForecast',
     data(){
         return{
+            timeSpan: ['0-6', '6-12', '12-18', '18-24'],
             weatherForecast: weatherForecast,
         }
     },
+    // watch:{
+    //     weatherForecast: function(newValue, oldValue){
+    //         console.log('changed!');
+    //     }
+    // }
 });
 </script>
 

@@ -23,5 +23,5 @@ pnpm-debug.log*
 *.sw?
 
 # python
-.venv
+.venv/
 log/
