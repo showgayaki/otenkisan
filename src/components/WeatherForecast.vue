@@ -1,5 +1,6 @@
 <template>
     <div class="weather-forecast">
+        <p v-if="errored" class="weather-forecast__error">{{ errorText }}</p>
         <div class="weather-forecast__forecast">
             <div class="weather-forecast__sky-pattern">
                 <img v-bind:src="weatherForecast['icon']" class="weather-forecast__icon" alt="天気アイコン">
@@ -9,12 +10,12 @@
                 <p class="weather-forecast__temp weather-forecast__temp--max">
                     <span class="weather-forecast__temp-text">最高</span>
                     <span class="weather-forecast__degree">{{ weatherForecast['max'] }}</span>
-                    <span class="weather-forecast__temp-text">{{ weatherForecast['max-diff'] }}</span>
+                    <span class="weather-forecast__temp-text">{{ weatherForecast['max_diff'] }}</span>
                 </p>
                 <p class="weather-forecast__temp weather-forecast__temp--min">
                     <span class="weather-forecast__temp-text">最低</span>
                     <span class="weather-forecast__degree"> {{ weatherForecast['min'] }}</span>
-                    <span class="weather-forecast__temp-text">{{ weatherForecast['min-diff'] }}</span>
+                    <span class="weather-forecast__temp-text">{{ weatherForecast['min_diff'] }}</span>
                 </p>
             </div>
         </div>
@@ -26,7 +27,7 @@
             </thead>
             <tbody>
                 <tr>
-                    <td v-for="percent in weatherForecast['rainy-percent']" :key="percent" class="weather-forecast__table-data">{{ percent }}</td>
+                    <td v-for="percent in weatherForecast['rainy_percent']" :key="percent" class="weather-forecast__table-data">{{ percent }}</td>
                 </tr>
             </tbody>
         </table>
@@ -35,21 +36,67 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import weatherForecast from '../assets/json/temp.json';
+import ApiService from "@/services/ApiService";
+import ResponseData from "@/types/ResponseData";
+import WeatherForecast from '@/types/Weather';
 
 export default defineComponent({
     name: 'WeatherForecast',
-    data(){
+    props: [
+        'minutes',
+        'seconds'
+    ],
+    data() {
         return{
             timeSpan: ['0-6', '6-12', '12-18', '18-24'],
-            weatherForecast: weatherForecast,
+            weatherForecast: {
+                'state': '---',
+                'max': '---',
+                'max_diff': '[---]',
+                'min': '---',
+                'min_diff': '[---]',
+                'icon': 'https://static.tenki.jp/images/icon/forecast-days-weather/01_n.png',
+                'rainy_percent': [
+                    '---',
+                    '---',
+                    '---',
+                    '---'
+                ]
+            } as WeatherForecast,
+            loading: true,
+            errored: false,
+            errorText: '',
         }
     },
-    // watch:{
-    //     weatherForecast: function(newValue, oldValue){
-    //         console.log('changed!');
-    //     }
-    // }
+    mounted: function(){
+        let weatherId = this.fetchWeatherForecast();
+    },
+    computed: {
+        checkTime(){
+            // 一時間に一回、指定分に実行
+            if(this.minutes == process.env.VUE_APP_FETCH_API_MINUTES && this.seconds == '00'){
+                this.fetchWeatherForecast();
+            }
+            return {'minutes': this.minutes, 'seconds': this.seconds};
+        }
+    },
+    methods: {
+        // 参考：https://www.bezkoder.com/vue-3-typescript-axios/
+        fetchWeatherForecast(){
+            ApiService.getAll('temp.json')
+            .then((res: ResponseData) => {
+                console.log(res.data);
+                this.errored = false;
+                this.weatherForecast = res.data;
+            })
+            .catch(error => {
+                console.log(error);
+                this.errored = true;
+                this.errorText = error;
+            })
+            .finally(() => this.loading = false)
+        },
+    }
 });
 </script>
 
@@ -57,6 +104,10 @@ export default defineComponent({
 .weather-forecast{
     width: calc(50% - 25px);
     margin-right: 50px;
+    &__error{
+        font-size: 24px;
+        text-align: center;
+    }
     &__forecast{
         display: flex;
         justify-content: center;

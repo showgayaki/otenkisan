@@ -8,7 +8,7 @@ class Config:
         self.root_dir = root_dir
 
     def fetch_config(self):
-        dotenv_path = Path(self.root_dir).resolve().joinpath('.env.local')
+        dotenv_path = Path(self.root_dir).parents[0].resolve().joinpath('.env.local')
         load_dotenv(dotenv_path)
         conf = {
             'target_url': os.environ.get('TARGET_URL'),

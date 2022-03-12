@@ -14,8 +14,8 @@ export default defineComponent({
     name: 'DatetimeNow',
     data(){
         return{
-            currentDate: '',
-            currentTime: [] as string[],
+            currentDate: 'Datetime',
+            currentTime: ['Loading...'],
             week: ['(日)', '(月)', '(火)', '(水)', '(木)',  '(金)', '(土)'],
         }
     },
@@ -30,7 +30,10 @@ export default defineComponent({
             const seconds = String(now.getSeconds()).padStart(2, '0');
 
             this.currentDate = now.getFullYear() + '年' + (now.getMonth() + 1) + '月' + now.getDate() + '日' + this.week[now.getDay()];
-            this.currentTime = [hours, minutes, seconds]
+            this.currentTime = [hours, minutes, seconds];
+
+            // 親コンポーネントに分数を渡す
+            this.$emit('fetchTime', [minutes, seconds]);
         }
     }
 });

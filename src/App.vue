@@ -1,8 +1,8 @@
 <template>
     <div class="container">
-        <DatetimeNow />
+        <DatetimeNow @fetchTime="emitTime" />
         <div class="weather-calendar">
-            <WeatherForecast />
+            <WeatherForecast :minutes="minutesNow" :seconds="secondsNow" />
             <MonthlyCalendar />
         </div>
     </div>
@@ -11,9 +11,9 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import '../src/assets/css/reset.css'
-import DatetimeNow from './components/DatetimeNow.vue';
-import WeatherForecast from './components/WeatherForecast.vue';
-import MonthlyCalendar from './components/MonthlyCalendar.vue';
+import DatetimeNow from '@/components/DatetimeNow.vue';
+import WeatherForecast from '@/components/WeatherForecast.vue';
+import MonthlyCalendar from '@/components/MonthlyCalendar.vue';
 
 export default defineComponent({
     name: 'App',
@@ -21,6 +21,19 @@ export default defineComponent({
         DatetimeNow,
         WeatherForecast,
         MonthlyCalendar
+    },
+    data() {
+        return {
+            minutesNow: '',
+            secondsNow: '',
+        };
+    },
+    methods: {
+        // DatetimeNowコンポーネントから分と秒を受け取り
+        emitTime(time: string[]) {
+            this.minutesNow = time[0];
+            this.secondsNow = time[1];
+        }
     }
 });
 </script>

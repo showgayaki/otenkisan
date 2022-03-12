@@ -11,7 +11,7 @@ import '@fullcalendar/core/vdom';
 import FullCalendar, { DayCellContentArg, EventContentArg } from '@fullcalendar/vue3';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import holidaysDate from '../assets/json/holiday.json';
+import holidaysDate from '../../public/json/holiday.json';
 
 export default defineComponent({
     name: 'MonthlyCalendar',
@@ -37,7 +37,7 @@ export default defineComponent({
                         }
                     });
                 },
-            },
+            } as object,
             holidaysDate: holidaysDate,
         }
     },
