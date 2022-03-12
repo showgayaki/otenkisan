@@ -68,11 +68,11 @@ export default defineComponent({
     }
 }
 /* カレンダーのゾーン */
+.fc .fc-toolbar.fc-header-toolbar{
+    margin-bottom: 10px;
+}
 .fc-scrollgrid{
     background-color: #fff;
-}
-.fc-view-harness{
-    min-height: 400px;
 }
 .fc-col-header-cell-cushion,
 .fc-daygrid-day-number{
