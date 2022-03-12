@@ -1,5 +1,6 @@
 .DS_Store
 node_modules
+package-lock.json
 /dist
 json/
 
@@ -23,5 +24,6 @@ pnpm-debug.log*
 *.sw?
 
 # python
+__pycache__/
 .venv/
 log/

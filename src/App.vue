@@ -38,9 +38,9 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style lang="scss">
 #app{
-    font-family: Avenir, Helvetica, Arial, sans-serif;
+    font-family: Avenir, Helvetica, Arial, sans-serif, "Noto Serif JP";
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     color: #fff;
@@ -49,10 +49,17 @@ html{
     background: #222;
 }
 .container{
-    padding: 60px 30px 50px;
+    padding: 30px;
     margin: 0 auto;
+    @media screen and (max-width: 768px){
+        display: block;
+        padding: 30px 15px;
+    }
 }
 .weather-calendar{
     display: flex;
+    @media screen and (max-width: 768px){
+        display: block;
+    }
 }
 </style>

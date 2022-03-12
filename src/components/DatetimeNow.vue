@@ -42,13 +42,13 @@ export default defineComponent({
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 .datetime-now{
-    margin-bottom: 30px;
+    margin-bottom: 10px;
     &__date{
-        margin-bottom: 30px;
-        font-size: 65px;
+        margin-bottom: 10px;
+        font-size: 40px;
     }
     &__clock{
-        font-size: 120px;
+        font-size: 100px;
         text-align: center;
     }
     &__time{
@@ -60,6 +60,7 @@ export default defineComponent({
     }
 
     @media screen and (max-width: 768px){
+        margin-bottom: 20px;
         &__date{
             margin-bottom: 30px;
             font-size: 24px;

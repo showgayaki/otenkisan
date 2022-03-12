@@ -64,11 +64,15 @@ export default defineComponent({
 .monthly-calendar{
     width: calc(50% - 25px);
     @media screen and (max-width: 768px){
+        width: 100%;
     }
 }
 /* カレンダーのゾーン */
 .fc-scrollgrid{
     background-color: #fff;
+}
+.fc-view-harness{
+    min-height: 400px;
 }
 .fc-col-header-cell-cushion,
 .fc-daygrid-day-number{

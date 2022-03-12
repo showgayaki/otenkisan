@@ -116,7 +116,7 @@ export default defineComponent({
         font-size: 27px;
     }
     &__sky-pattern{
-        margin: 0 50px 0 0;
+        margin: 0 20px 0 0;
         text-align: center;
     }
     &__icon{
@@ -165,6 +165,23 @@ export default defineComponent({
         text-align: center;
     }
     @media screen and (max-width: 768px){
+        width: 100%;
+        margin: 0 0 50px;
+        &__forecast{
+            font-size: 20px;
+        }
+        &__icon{
+            margin-bottom: 0;
+        }
+        &__temp-text{
+            width: 2em;
+        }
+        &__degree{
+            font-size: 30px;
+            &::after{
+                font-size: 20px;
+            }
+        }
     }
 }
 </style>
