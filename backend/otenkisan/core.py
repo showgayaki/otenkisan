@@ -36,7 +36,7 @@ def main():
     wf = WeatherForecast(cfg['target_url'], cfg['target_attr'])
     forecsast = wf.fetch_weather_forecast()
 
-    json_dir = Path(root_dir.parent).joinpath('dist/json')
+    json_dir = Path(root_dir.parent).joinpath('src/assets/json')
     # jsonフォルダ無かったら作成
     if not json_dir.is_dir(): Path.mkdir(json_dir)
     # json保存
