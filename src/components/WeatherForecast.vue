@@ -1,6 +1,7 @@
 <template>
     <div class="weather-forecast">
         <p v-if="errored" class="weather-forecast__error">{{ errorText }}</p>
+        <p class="weather-forecast__check-time">{{ checkTime }}</p>
         <div class="weather-forecast__forecast">
             <div class="weather-forecast__sky-pattern">
                 <img v-bind:src="weatherForecast['icon']" class="weather-forecast__icon" alt="天気アイコン">
@@ -107,6 +108,9 @@ export default defineComponent({
     &__error{
         font-size: 24px;
         text-align: center;
+    }
+    &__check-time{
+        display: none;
     }
     &__forecast{
         display: flex;
