@@ -98,7 +98,7 @@ server {
     }
 
     location ^~ /otenkisan/json/ {
-        alias [path_to]/otenkisan/src/assets/json/;
+        alias [path_to]/otenkisan/public/json/;
     }
 }
 ```
