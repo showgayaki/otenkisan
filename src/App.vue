@@ -2,8 +2,8 @@
     <div class="container">
         <DatetimeNow @fetchTime="emitTime" />
         <div class="weather-calendar">
-            <WeatherForecast :minutes="minutesNow" :seconds="secondsNow" />
-            <MonthlyCalendar />
+            <WeatherForecast :minutes="datetime['minutes']" :seconds="datetime['seconds']" />
+            <MonthlyCalendar :datetime="datetime"/>
         </div>
     </div>
 </template>
@@ -24,15 +24,27 @@ export default defineComponent({
     },
     data() {
         return {
-            minutesNow: '',
-            secondsNow: '',
+            datetime: {
+                year: '',
+                month: '',
+                date: '',
+                day: '',
+                hours: '',
+                minutes: '',
+                seconds: '',
+            },
         };
     },
     methods: {
         // DatetimeNowコンポーネントから分と秒を受け取り
-        emitTime(time: string[]) {
-            this.minutesNow = time[0];
-            this.secondsNow = time[1];
+        emitTime(datetime: {[index: string]: string}) {
+            this.datetime['year'] = datetime['year'];
+            this.datetime['month'] = datetime['month'];
+            this.datetime['date'] = datetime['date'];
+            this.datetime['day'] = datetime['day'];
+            this.datetime['hours'] = datetime['hours'];
+            this.datetime['minutes'] = datetime['minutes'];
+            this.datetime['seconds'] = datetime['seconds'];
         }
     }
 });

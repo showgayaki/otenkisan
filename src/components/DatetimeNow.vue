@@ -25,15 +25,31 @@ export default defineComponent({
     methods: {
         getDatetimeNow(){
             const now: Date = new Date;
+            const year = String(now.getFullYear());
+            const month = String(now.getMonth() + 1);
+            const date = String(now.getDate());
+            const day = this.week[now.getDay()];
+
             const hours = String(now.getHours()).padStart(2, '0');
             const minutes = String(now.getMinutes()).padStart(2, '0');
             const seconds = String(now.getSeconds()).padStart(2, '0');
 
-            this.currentDate = now.getFullYear() + '年' + (now.getMonth() + 1) + '月' + now.getDate() + '日' + this.week[now.getDay()];
+            this.currentDate = year + '年' + month + '月' + date + '日' + day;
             this.currentTime = [hours, minutes, seconds];
 
-            // 親コンポーネントに分数を渡す
-            this.$emit('fetchTime', [minutes, seconds]);
+            // 親コンポーネントに日時を渡す
+            this.$emit(
+                'fetchTime',
+                {
+                    'year': year,
+                    'month': month,
+                    'date': date,
+                    'day': day,
+                    'hours': hours,
+                    'minutes': minutes,
+                    'seconds': seconds
+                }
+            );
         }
     }
 });

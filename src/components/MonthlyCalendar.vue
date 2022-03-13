@@ -1,7 +1,8 @@
 
 <template>
     <div class="monthly-calendar">
-        <FullCalendar :options="calendarOptions" />
+        <p class="monthly-calendar__date">{{ checkDate }}</p>
+        <FullCalendar ref="calendar" :options="calendarOptions" />
     </div>
 </template>
 
@@ -15,6 +16,9 @@ import holidaysDate from '../../public/json/holiday.json';
 
 export default defineComponent({
     name: 'MonthlyCalendar',
+    props: [
+        'datetime',
+    ],
     components: {
         FullCalendar,
     },
@@ -39,6 +43,17 @@ export default defineComponent({
                 },
             } as object,
             holidaysDate: holidaysDate,
+            lastDay: '',
+        }
+    },
+    computed: {
+        checkDate(){
+            // 月が変わったら(日付が前回より小さくなったら)カレンダーリフレッシュ
+            if(this.datetime['date'] < this.lastDay){
+                (this.$refs.calendar as InstanceType<typeof FullCalendar>).$emit('refetch-events');
+            }
+            this.updateDate(this.datetime['date']);
+            return this.datetime;
         }
     },
     methods: {
@@ -55,6 +70,9 @@ export default defineComponent({
                 events.push(holiday);
             }
             return events;
+        },
+        updateDate(dateNow: string){
+            this.lastDay = dateNow;
         }
     }
 });
@@ -63,6 +81,9 @@ export default defineComponent({
 <style lang="scss">
 .monthly-calendar{
     width: calc(50% - 25px);
+    &__date{
+        display: none;
+    }
     @media screen and (max-width: 768px){
         width: 100%;
     }
@@ -73,6 +94,12 @@ export default defineComponent({
 }
 .fc-scrollgrid{
     background-color: #fff;
+}
+.fc-daygrid-day{
+    background: #eee;
+}
+.fc-theme-standard td{
+    border: 1px solid #fff;
 }
 .fc-col-header-cell-cushion,
 .fc-daygrid-day-number{
