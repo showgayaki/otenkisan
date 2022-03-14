@@ -70,7 +70,7 @@ export default defineComponent({
         }
     },
     mounted: function(){
-        let weatherId = this.fetchWeatherForecast();
+        this.fetchWeatherForecast();
     },
     computed: {
         checkTime(){

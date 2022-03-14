@@ -1,4 +1,5 @@
 import requests
+from pathlib import Path
 from bs4 import BeautifulSoup
 
 
@@ -20,13 +21,15 @@ class WeatherForecast:
     }
     """
     def __init__(self, target_url, target_attr):
+        self.TIME_OUT = (3, 6)
+        self.USER_AGENT = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36'}
         self.target_url = target_url
         self.target_attr = target_attr
 
     def fetch_weather_forecast(self):
         forecast_dict = {}
         try:
-            res = requests.get(self.target_url, timeout=(3, 6))
+            res = requests.get(self.target_url, headers=self.USER_AGENT, timeout=self.TIME_OUT)
             if res.status_code == 200:
                 soup = BeautifulSoup(res.content, 'html.parser')
                 today_weather = soup.select(self.target_attr)
@@ -45,3 +48,23 @@ class WeatherForecast:
             forecast_dict['error'] = str(e)
 
         return forecast_dict
+
+    def fetch_forecast_icon(self, root_dir, src_url):
+        file_name = src_url.split('/')[-1]
+        image_dir = Path(root_dir.parent).joinpath('public/images')
+        image_file_path = Path(image_dir).joinpath(file_name)
+        try:
+            res = requests.get(src_url, headers=self.USER_AGENT, timeout=self.TIME_OUT)
+            image = res.content
+            # imagesフォルダなかったら作成
+            if not image_dir.is_dir(): Path.mkdir(image_dir)
+            # 画像保存
+            with open(image_file_path, 'wb') as f:
+                f.write(image)
+
+            if Path(image_file_path).exists():
+                return str(image_file_path)
+            else:
+                return False
+        except Exception as e:
+            return str(e)

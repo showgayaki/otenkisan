@@ -64,7 +64,7 @@ export default defineComponent({
         font-size: 40px;
     }
     &__clock{
-        font-size: 100px;
+        font-size: 120px;
         text-align: center;
     }
     &__time{

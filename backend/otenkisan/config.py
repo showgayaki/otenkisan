@@ -11,6 +11,7 @@ class Config:
         dotenv_path = Path(self.root_dir).parents[0].resolve().joinpath('.env.local')
         load_dotenv(dotenv_path)
         conf = {
+            'app_name': 'otenkisan',
             'target_url': os.environ.get('TARGET_URL'),
             'target_attr': os.environ.get('TARGET_ATTR'),
         }
