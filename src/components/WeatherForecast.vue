@@ -84,7 +84,7 @@ export default defineComponent({
     methods: {
         // 参考：https://www.bezkoder.com/vue-3-typescript-axios/
         fetchWeatherForecast(){
-            ApiService.getAll('temp.json')
+            ApiService.getAll('forecast.json')
             .then((res: ResponseData) => {
                 console.log(res.data);
                 this.errored = false;

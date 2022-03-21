@@ -64,6 +64,7 @@ export default defineComponent({
         font-size: 40px;
     }
     &__clock{
+        font-family: "MPLUS1p-Medium";
         font-size: 120px;
         text-align: center;
     }
