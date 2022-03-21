@@ -23,6 +23,9 @@ def build_json_data(last, current, last_min_max):
     forecast_data = current.copy()
     # とりあえず前回のmin_max入れておく
     min_max = {'max': last_min_max['max'], 'min': last_min_max['min']}
+    # とりあえずFalse入れておく
+    forecast_data['none_last_max'] = False
+    forecast_data['none_last_min'] = False
 
     # 今回取得分がNoneの場合は前回データ引き継ぎ
     if current['max'] is None:
@@ -31,7 +34,6 @@ def build_json_data(last, current, last_min_max):
     elif last['none_last_max'] is True:
         # 前回Noneで今回値が取れていれば(日をまたいだら)min_max更新
         min_max['max'] = last['max']
-        forecast_data['none_last_max'] = False
 
     # 今回取得分がNoneの場合は前回データ引き継ぎ
     if current['min'] is None:
@@ -40,7 +42,6 @@ def build_json_data(last, current, last_min_max):
     elif last['none_last_min'] is True:
         # 前回Noneで今回値が取れていれば(日をまたいだら)min_max更新
         min_max['min'] = last['min']
-        forecast_data['none_last_min'] = False
 
     # 気温の前日比計算
     max_diff = int(forecast_data['max']) - int(min_max['max'])
