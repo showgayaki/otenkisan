@@ -37,7 +37,10 @@ export default defineComponent({
                 eventContent: function(arg: EventContentArg){
                     document.querySelectorAll<HTMLElement>('.fc-daygrid-day').forEach(el => {
                         if(el.dataset.date == arg.event.extendedProps.holiday){
-                            el.setAttribute('class', 'holiday');
+                            // classを一旦退避
+                            let classes = el.getAttribute('class');
+                            // holidayを追加してclass設定
+                            el.setAttribute('class', classes as string + ' holiday');
                         }
                     });
                 },
@@ -113,7 +116,8 @@ export default defineComponent({
     color: #00f;
 }
 .fc-day-sun .fc-col-header-cell-cushion,
-.fc-day-sun .fc-daygrid-day-number{
+.fc-day-sun .fc-daygrid-day-number,
+.holiday .fc-daygrid-day-number{
     color: #f00;
 }
 .fc-day-sun,
@@ -130,7 +134,7 @@ export default defineComponent({
     font-weight: bold;
     text-align: center;
 }
-.holiday .fc-h-event{
+.holiday.fc-h-event{
     border: 1px solid #DC143C;
 }
 </style>
