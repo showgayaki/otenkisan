@@ -12,7 +12,6 @@ class Config:
         load_dotenv(dotenv_path)
         conf = {
             'app_name': 'otenkisan',
-            'target_url': os.environ.get('TARGET_URL'),
-            'target_attr': os.environ.get('TARGET_ATTR'),
+            'api_url': os.environ.get('API_URL'),
         }
         return conf

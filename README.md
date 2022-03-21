@@ -6,7 +6,7 @@
 [Fully Kiosk Browser & Lockdown](https://play.google.com/store/apps/details?id=de.ozerov.fully&hl=ja&gl=US)  
 
 - 天気情報  
-天気情報は[tenki.jp](https://tenki.jp/)から取得。  
+天気情報は[天気予報 API](https://weather.tsukumijima.net/)から取得。  
 
 - カレンダー  
 [FullCalendar](https://fullcalendar.io/)を使用。
