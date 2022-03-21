@@ -49,6 +49,8 @@ def build_json_data(last, current, last_min_max):
     # 0の場合はプラマイ表記に置き換える
     forecast_data['max_diff'] = '[{:+}]'.format(max_diff).replace('+', '±') if max_diff == 0 else '[{:+}]'.format(max_diff)
     forecast_data['min_diff'] = '[{:+}]'.format(min_diff).replace('+', '±') if min_diff == 0 else '[{:+}]'.format(min_diff)
+    # パーセント表示ない時用
+    forecast_data['rainy_percent'] = [percent.replace('--%', '---') for percent in forecast_data['rainy_percent']]
 
     return min_max, forecast_data
 
