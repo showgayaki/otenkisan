@@ -103,12 +103,14 @@ def main():
 
         # 保存用json組み立て
         min_max, forecast_data = build_json_data(last_forecast, forecast, last_min_max)
-        log.logging('info', 'min_max: {}'.format(min_max))
-        log.logging('info', 'forecast_data: {}'.format(forecast_data))
 
         # 最高最低が更新されていればjson保存
         if load_json(temp_yesterday_path) != min_max:
+            log.logging('info', 'Update min_max')
             save_json(temp_yesterday_path, min_max)
+
+        log.logging('info', 'min_max: {}'.format(min_max))
+        log.logging('info', 'Current forecast_data: {}'.format(forecast_data))
         # 予報json保存
         save_json(forecast_path, forecast_data)
 
