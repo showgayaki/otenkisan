@@ -11,12 +11,12 @@
                 <p class="weather-forecast__temp weather-forecast__temp--max">
                     <span class="weather-forecast__temp-text">最高</span>
                     <span class="weather-forecast__degree">{{ weatherForecast['max'] }}</span>
-                    <span class="weather-forecast__temp-text">{{ weatherForecast['max_diff'] }}</span>
+                    <span class="weather-forecast__temp-diff">{{ weatherForecast['max_diff'] }}</span>
                 </p>
                 <p class="weather-forecast__temp weather-forecast__temp--min">
                     <span class="weather-forecast__temp-text">最低</span>
                     <span class="weather-forecast__degree"> {{ weatherForecast['min'] }}</span>
-                    <span class="weather-forecast__temp-text">{{ weatherForecast['min_diff'] }}</span>
+                    <span class="weather-forecast__temp-diff">{{ weatherForecast['min_diff'] }}</span>
                 </p>
             </div>
         </div>
@@ -115,7 +115,7 @@ export default defineComponent({
     &__forecast{
         display: flex;
         justify-content: center;
-        align-items: center;
+        align-items: flex-end;
         margin-bottom: 20px;
         font-size: 27px;
     }
@@ -125,7 +125,6 @@ export default defineComponent({
     }
     &__icon{
         width: 120px;
-        margin-bottom: 20px;
     }
     &__temp{
         &--max{

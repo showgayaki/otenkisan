@@ -71,7 +71,7 @@ html{
     background: #333;
 }
 .container{
-    padding: 30px;
+    padding: 20px 30px;
     margin: 0 auto;
     @media screen and (max-width: 768px){
         display: block;
