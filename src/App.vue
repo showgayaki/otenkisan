@@ -84,6 +84,7 @@ html{
     display: block;
     @media screen and (min-width: 576px){
         display: flex;
+        justify-content: space-between;
     }
 }
 </style>
