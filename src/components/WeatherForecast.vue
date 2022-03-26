@@ -103,10 +103,10 @@ export default defineComponent({
 
 <style lang="scss">
 .weather-forecast{
-    width: calc(50% - 25px);
-    margin-right: 50px;
+    width: 100%;
+    margin: 0 20px 50px 0;
     &__error{
-        font-size: 24px;
+        font-size: 16px;
         text-align: center;
     }
     &__check-time{
@@ -116,8 +116,8 @@ export default defineComponent({
         display: flex;
         justify-content: center;
         align-items: flex-end;
-        margin-bottom: 20px;
-        font-size: 27px;
+        margin-bottom: 10px;
+        font-size: 16px;
     }
     &__sky-pattern{
         margin: 0 20px 0 0;
@@ -128,7 +128,7 @@ export default defineComponent({
     }
     &__temp{
         &--max{
-            margin-bottom: 10px;
+            margin-bottom: 5px;
             color: #f00;
         }
         &--min{
@@ -142,7 +142,7 @@ export default defineComponent({
     &__degree{
         width: 6rem;
         display: inline-block;
-        font-size: 36px;
+        font-size: 28px;
         font-weight: bold;
         text-align: right;
         &::after{
@@ -159,7 +159,7 @@ export default defineComponent({
     &__table-header,
     &__table-data{
         border: 1px solid #fff;
-        font-size: 24px;
+        font-size: 16px;
     }
     &__table-header,
     &__table-data{
@@ -167,23 +167,51 @@ export default defineComponent({
         padding: 8px 0;
         text-align: center;
     }
-    @media screen and (max-width: 768px){
-        width: 100%;
-        margin: 0 0 50px;
+
+    &__icon{
+        width: 80px;
+    }
+    &__temp-text{
+        width: 2em;
+    }
+    @media screen and (min-width: 576px){
+        margin: 0 20px 0 0;
+    }
+    @media screen and (min-width: 960px){
+        width: calc(50% - 25px);
+        &__error{
+            font-size: 24px;
+        }
         &__forecast{
-            font-size: 20px;
+            margin-bottom: 20px;
+            font-size: 27px;
+        }
+        &__sky-pattern{
+            margin: 0 20px 0 0;
         }
         &__icon{
-            margin-bottom: 0;
+            width: 120px;
         }
         &__temp-text{
-            width: 2em;
+            width: 3em;
         }
         &__degree{
-            font-size: 30px;
-            &::after{
-                font-size: 20px;
-            }
+            font-size: 36px;
+        }
+        &__table{
+            width: 100%;
+        }
+        &__table,
+        &__table-header,
+        &__table-data{
+            border: 1px solid #fff;
+            font-size: 24px;
+        }
+        &__table-header,
+        &__table-data{
+            width: calc(100% / 4);
+            padding: 8px 0;
+            text-align: center;
         }
     }
 }

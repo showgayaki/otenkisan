@@ -58,15 +58,16 @@ export default defineComponent({
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 .datetime-now{
-    margin-bottom: 10px;
+    margin-bottom: 30px;
     &__date{
-        margin-bottom: 10px;
-        font-size: 40px;
+        margin-bottom: 20px;
+        font-size: 22px;
     }
     &__clock{
         font-family: "MPLUS1p-Medium";
-        font-size: 120px;
+        font-size: 60px;
         text-align: center;
+        line-height: .8;
     }
     &__time{
         color: #fff;
@@ -75,15 +76,27 @@ export default defineComponent({
             display: inline-block;
         }
     }
-
-    @media screen and (max-width: 768px){
-        margin-bottom: 20px;
+    @media screen and (min-width: 576px){
+        margin-bottom: 15px;
+        &__date{
+            margin-bottom: 0;
+        }
+    }
+    @media screen and (min-width: 960px){
+        margin-bottom: 30px;
         &__date{
             margin-bottom: 30px;
-            font-size: 24px;
+            font-size: 40px;
         }
         &__clock{
-            font-size: 60px;
+            font-size: 120px;
+        }
+        &__time{
+            color: #fff;
+            &:not(:last-child)::after{
+                content: ":";
+                display: inline-block;
+            }
         }
     }
 }

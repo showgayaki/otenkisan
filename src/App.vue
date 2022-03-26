@@ -71,17 +71,19 @@ html{
     background: #333;
 }
 .container{
-    padding: 20px 30px;
+    padding: 30px 15px;
     margin: 0 auto;
-    @media screen and (max-width: 768px){
-        display: block;
-        padding: 30px 15px;
+    @media screen and (min-width: 576px){
+        padding: 15px;
+    }
+    @media screen and (min-width: 960px){
+        padding: 30px;
     }
 }
 .weather-calendar{
-    display: flex;
-    @media screen and (max-width: 768px){
-        display: block;
+    display: block;
+    @media screen and (min-width: 576px){
+        display: flex;
     }
 }
 </style>

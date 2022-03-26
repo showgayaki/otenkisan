@@ -30,6 +30,7 @@ export default defineComponent({
                 locale: 'ja',
                 navLinks: false,
                 fixedWeekCount: false,
+                contentHeight: 'auto',
                 dayCellContent: function(e: DayCellContentArg){
                     e.dayNumberText = e.dayNumberText.replace('日', '');
                 },
@@ -87,29 +88,48 @@ export default defineComponent({
     &__date{
         display: none;
     }
-    @media screen and (max-width: 768px){
+    @media screen and (max-width: 960px){
         width: 100%;
     }
 }
 /* カレンダーのゾーン */
+.fc .fc-toolbar-title,
+.fc-toolbar-chunk{
+    font-size: 14px;
+}
 .fc .fc-toolbar.fc-header-toolbar{
-    margin-bottom: 10px;
+    margin-bottom: 5px;
+}
+.fc .fc-button{
+    padding: 0 .65em;
+}
+.fc .fc-button .fc-icon{
+    font-size: 1.2em;
 }
 .fc-scrollgrid{
     background-color: #fff;
 }
 .fc-daygrid-day{
+    height: 2.4em;
     background: #eee;
 }
 .fc-theme-standard td{
     border: 1px solid #fff;
 }
 .fc-col-header-cell-cushion,
-.fc-daygrid-day-number{
+.fc .fc-daygrid-day-number{
+    padding: 2px;
     color: #333;
+    font-size: .7em;
 }
 .fc-day-sat{
     background-color: #eaf4ff;
+}
+.fc .fc-daygrid-body-unbalanced .fc-daygrid-day-events{
+    min-height: unset;
+}
+.fc .fc-daygrid-body-natural .fc-daygrid-day-events{
+    margin-bottom: 0;
 }
 .fc-day-sat .fc-col-header-cell-cushion,
 .fc-day-sat .fc-daygrid-day-number{
@@ -127,14 +147,39 @@ export default defineComponent({
 .fc-col-header-cell{
     background-color: lightgray;
 }
+.holiday.fc-h-event{
+    border: none;
+}
 .fc-event-title{
     width: 100%;
     background: #DC143C;
-    font-size: .9em;
+    font-size: .6em;
     font-weight: bold;
     text-align: center;
-}
-.holiday.fc-h-event{
     border: 1px solid #DC143C;
+    border-radius: 3px;
+}
+
+@media screen and (min-width: 960px){
+    .fc .fc-toolbar.fc-header-toolbar{
+        margin-bottom: 10px;
+    }
+    .fc .fc-toolbar-title{
+        font-size: 28px;
+    }
+    .fc .fc-button .fc-icon{
+        font-size: 24px;
+    }
+    .fc-col-header-cell-cushion,
+    .fc .fc-daygrid-day-number{
+        font-size: 16px;
+    }
+    .fc-event-title{
+        font-size: .9em;
+    }
+    .fc-daygrid-day{
+        height: 3em;
+        font-size: 18px;
+    }
 }
 </style>
