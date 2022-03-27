@@ -84,12 +84,12 @@ export default defineComponent({
 
 <style lang="scss">
 .monthly-calendar{
-    width: calc(50% - 25px);
+    width: 100%;
     &__date{
         display: none;
     }
-    @media screen and (max-width: 960px){
-        width: 100%;
+    @media screen and (min-width: 576px){
+        width: calc(50% - 15px);
     }
 }
 /* カレンダーのゾーン */

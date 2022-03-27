@@ -105,7 +105,7 @@ def fetch_forecast(**kwargs):
         kwargs['log'].logging('info', 'Current forecast_data: {}'.format(forecast_data))
         # 予報json保存
         save_json(forecast_path, forecast_data)
-        kwargs['log'].logging('info', '===== Finished to fetch forecast. =====')
+        kwargs['log'].logging('info', '=== Finished to fetch forecast. ===')
 
 
 def fetch_switchbot_data(**kwargs):
@@ -120,7 +120,7 @@ def fetch_switchbot_data(**kwargs):
     switchbot_path = Path(kwargs['json_dir']).joinpath('switchbot.json')
     kwargs['log'].logging('info', 'Switchbot data save to {}'.format(switchbot_path))
     save_json(switchbot_path, temp_data)
-    kwargs['log'].logging('info', '===== Finished to fetch Switchbot. =====')
+    kwargs['log'].logging('info', '=== Finished to fetch Switchbot. ===')
 
 
 def main():
