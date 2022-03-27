@@ -1,8 +1,10 @@
 import json
 import socket
+from datetime import datetime
 from pathlib import Path
 from config import Config
 from weather_forecast import WeatherForecast
+from switchbot import Switchbot
 from logger import Logger
 
 
@@ -60,45 +62,35 @@ def save_json(json_path, data):
         json.dump(data, f, indent=4, ensure_ascii=False)
 
 
-def main():
-    computer_name = socket.gethostname() # 実行コンピュータ名
-    root_dir = Path(__file__).resolve().parents[1] # backendプロジェクトルート
-    json_dir = Path(root_dir.parent).joinpath('public/json') # json保存先
-    # 設定読み込み
-    cfg = load_config(root_dir)
-    # ログ開始
-    log = Logger(root_dir)
-    log.logging('info', '===== {} Started on {} ====='.format(cfg['app_name'], computer_name))
-    # 天気予報
-    log.logging('info', 'Start to fetch Weather Forecast.')
-    log.logging('info', 'api_url: {}'.format(cfg['api_url']))
+def fetch_forecast(**kwargs):
+    # 天気予報開始
+    kwargs['log'].logging('info', 'Start to fetch Weather Forecast.')
+    kwargs['log'].logging('info', 'Forecast API URL: {}'.format(kwargs['cfg']['forecast_api_url']))
     # 天気予報取得
-    wf = WeatherForecast(cfg['api_url'])
+    wf = WeatherForecast(kwargs['cfg']['forecast_api_url'])
     forecast = wf.fetch_weather_forecast()
-    log.logging('info', 'Forecast: {}'.format(forecast))
+    kwargs['log'].logging('info', 'Forecast: {}'.format(forecast))
     # アイコンダウンロード
-    forecast_icon = wf.fetch_forecast_icon(root_dir, forecast['icon'])
-    # jsonフォルダ無かったら作成
-    if not json_dir.is_dir(): Path.mkdir(json_dir)
-    forecast_path = Path(json_dir).joinpath('forecast.json')
-    temp_yesterday_path = Path(json_dir).joinpath('temp_yesterday.json')
+    forecast_icon = wf.fetch_forecast_icon(kwargs['root_dir'], forecast['icon'])
+    forecast_path = Path(kwargs['json_dir']).joinpath('forecast.json')
+    temp_yesterday_path = Path(kwargs['json_dir']).joinpath('temp_yesterday.json')
 
     # 戻ってきたdictにエラーなかったらjsonとして保存
     if 'error' in forecast:
-        log.logging('error', 'FAILED to fetch Weather Forecast.')
+        kwargs['log'].logging('error', 'FAILED to fetch Weather Forecast.')
     else:
-        log.logging('info', 'Succeeded to fetch Weather Forecast.')
+        kwargs['log'].logging('info', 'Succeeded to fetch Weather Forecast.')
         last_forecast = load_json(forecast_path)
         last_min_max = load_json(temp_yesterday_path)
-        log.logging('info', 'last_forecast: {}'.format(last_forecast))
-        log.logging('info', 'last_min_max: {}'.format(last_min_max))
+        kwargs['log'].logging('info', 'last_forecast: {}'.format(last_forecast))
+        kwargs['log'].logging('info', 'last_min_max: {}'.format(last_min_max))
 
         # アイコンURLをローカルのパスに変更
         if forecast_icon:
-            log.logging('info', 'Save forecast icon => [{}]'.format(forecast_icon))
+            kwargs['log'].logging('info', 'Save forecast icon => [{}]'.format(forecast_icon))
             forecast['icon'] = forecast_icon.split('public/')[-1]
         else:
-            log.logging('error', 'FAILED to fetch forecast icon.')
+            kwargs['log'].logging('error', 'FAILED to fetch forecast icon.')
             forecast['icon'] = 'favicon.ico'
 
         # 保存用json組み立て
@@ -106,13 +98,51 @@ def main():
 
         # 最高最低が更新されていればjson保存
         if load_json(temp_yesterday_path) != min_max:
-            log.logging('info', 'Update min_max')
+            kwargs['log'].logging('info', 'Update min_max')
             save_json(temp_yesterday_path, min_max)
 
-        log.logging('info', 'min_max: {}'.format(min_max))
-        log.logging('info', 'Current forecast_data: {}'.format(forecast_data))
+        kwargs['log'].logging('info', 'min_max: {}'.format(min_max))
+        kwargs['log'].logging('info', 'Current forecast_data: {}'.format(forecast_data))
         # 予報json保存
         save_json(forecast_path, forecast_data)
+        kwargs['log'].logging('info', '===== Finished to fetch forecast. =====')
+
+
+def fetch_switchbot_data(**kwargs):
+    # 開始ログ
+    kwargs['log'].logging('info', 'Start to fetch Switchbot data.')
+    kwargs['log'].logging('info', 'Switchbot API URL: {}'.format(kwargs['cfg']['switchbot_api_url']))
+    # Switchbotからデータ取得
+    sb = Switchbot(kwargs['cfg']['switchbot_api_url'], kwargs['cfg']['switchbot_access_token'])
+    temp_data = sb.fetch_temp_data()
+    kwargs['log'].logging('info', 'Switchbot data: {}'.format(temp_data))
+    # jsonに保存
+    switchbot_path = Path(kwargs['json_dir']).joinpath('switchbot.json')
+    kwargs['log'].logging('info', 'Switchbot data save to {}'.format(switchbot_path))
+    save_json(switchbot_path, temp_data)
+    kwargs['log'].logging('info', '===== Finished to fetch Switchbot. =====')
+
+
+def main():
+    computer_name = socket.gethostname() # 実行コンピュータ名
+    root_dir = Path(__file__).resolve().parents[1] # backendプロジェクトルート
+    dt_now = datetime.now() # 現在時刻取得
+    now_minutes = dt_now.strftime('%M') # 現在分数取得
+    json_dir = Path(root_dir.parent).joinpath('public/json') # json保存先
+    if not json_dir.is_dir(): Path.mkdir(json_dir) # jsonフォルダ無かったら作成
+    cfg = load_config(root_dir) # 設定読み込み
+
+    # ログ開始
+    log = Logger(root_dir)
+    log.logging('info', '===== {} Started on {} ====='.format(cfg['app_name'], computer_name))
+
+    # 指定分数なら天気予報取得
+    if cfg['forecast_acquisition_minute'] == now_minutes:
+        fetch_forecast(**vars())
+
+    # switchbotのAPI URLが設定されていたら実行
+    if cfg['switchbot_api_url']:
+        fetch_switchbot_data(**vars())
 
     log.logging('info', '===== {} Stopped. ====='.format(cfg['app_name']))
 
