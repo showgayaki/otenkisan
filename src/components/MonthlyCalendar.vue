@@ -2,7 +2,7 @@
 <template>
     <div class="monthly-calendar">
         <p class="monthly-calendar__date">{{ checkDate }}</p>
-        <FullCalendar ref="calendar" :options="calendarOptions" />
+        <FullCalendar ref="calendar" :options="calendarOptions()" />
     </div>
 </template>
 
@@ -12,7 +12,9 @@ import '@fullcalendar/core/vdom';
 import FullCalendar, { DayCellContentArg, EventContentArg } from '@fullcalendar/vue3';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import holidaysDate from '../../public/json/holiday.json';
+import ApiService from '@/services/ApiService';
+import ResponseData from '@/types/ResponseData';
+import Holidays from '@/types/Holidays';
 
 export default defineComponent({
     name: 'MonthlyCalendar',
@@ -24,43 +26,43 @@ export default defineComponent({
     },
     data(){
         return {
-            calendarOptions: {
-                plugins: [ dayGridPlugin, interactionPlugin ],
-                initialView: 'dayGridMonth',
-                locale: 'ja',
-                navLinks: false,
-                fixedWeekCount: false,
-                contentHeight: 'auto',
-                dayCellContent: function(e: DayCellContentArg){
-                    e.dayNumberText = e.dayNumberText.replace('日', '');
-                },
-                events: this.getHoliday(holidaysDate),
-                eventContent: function(arg: EventContentArg){
-                    document.querySelectorAll<HTMLElement>('.fc-daygrid-day').forEach(el => {
-                        if(el.dataset.date == arg.event.extendedProps.holiday){
-                            // classを一旦退避
-                            let classes = el.getAttribute('class');
-                            // holidayを追加してclass設定
-                            el.setAttribute('class', classes as string + ' holiday');
-                        }
-                    });
-                },
-            } as object,
-            holidaysDate: holidaysDate,
+            holidaysDate: {} as Holidays,
             lastDay: '',
+            refresh: false,
+            loading: true,
+            errored: false,
+            errorText: '',
         }
+    },
+    mounted: function(){
+        this.fetchHolidaysDate();
     },
     computed: {
         checkDate(){
-            // 月が変わったら(日付が前回より小さくなったら)カレンダーリフレッシュ
-            if(this.datetime['date'] < this.lastDay){
-                (this.$refs.calendar as InstanceType<typeof FullCalendar>).$emit('refetch-events');
+            // 月が変わったら(日付が前回より小さくなったら)リフレッシュ
+            if(Number(this.datetime['date']) < Number(this.lastDay)){
+                // (this.$refs.calendar as InstanceType<typeof FullCalendar>).$emit('refetchEvents');
+                location.reload();
             }
             this.updateDate(this.datetime['date']);
             return this.datetime;
         }
     },
     methods: {
+        fetchHolidaysDate(){
+            ApiService.getAll('holiday.json')
+            .then((res: ResponseData) => {
+                this.errored = false;
+                this.holidaysDate = res.data;
+                console.log(res.data);
+            })
+            .catch(error => {
+                console.log(error);
+                this.errored = true;
+                this.errorText = error;
+            })
+            .finally(() => this.loading = false)
+        },
         getHoliday(holidaysDate: {[index: string]: string}){
             let events = [];
             let holidays: string[] = Object.keys(holidaysDate);
@@ -77,6 +79,31 @@ export default defineComponent({
         },
         updateDate(dateNow: string){
             this.lastDay = dateNow;
+        },
+        calendarOptions(){
+            let options = {
+                plugins: [ dayGridPlugin, interactionPlugin ],
+                initialView: 'dayGridMonth',
+                locale: 'ja',
+                navLinks: false,
+                fixedWeekCount: false,
+                contentHeight: 'auto',
+                dayCellContent: function(e: DayCellContentArg){
+                    e.dayNumberText = e.dayNumberText.replace('日', '');
+                },
+                events: this.getHoliday(this.holidaysDate),
+                eventContent: function(arg: EventContentArg){
+                    document.querySelectorAll<HTMLElement>('.fc-daygrid-day').forEach(el => {
+                        if(el.dataset.date == arg.event.extendedProps.holiday){
+                            // classを一旦退避
+                            let classes = el.getAttribute('class');
+                            // holidayを追加してclass設定
+                            el.setAttribute('class', classes as string + ' holiday');
+                        }
+                    });
+                },
+            }
+            return options
         }
     }
 });
