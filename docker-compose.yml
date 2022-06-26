@@ -1,0 +1,28 @@
+version: "3"
+services:
+  otenkisan-backend:
+    build:
+        context: .
+        dockerfile: ./Dockerfile-backend
+    container_name: otenkisan-backend
+    volumes:
+      - type: bind
+        source: "./"
+        target: "/var/otenkisan/"
+    restart: always
+    tty: true
+  otenkisan-frontend:
+    build:
+        context: .
+        dockerfile: ./Dockerfile-frontend
+    container_name: otenkisan-frontend
+    ports:
+      - "8003:80"
+    volumes:
+      - type: bind
+        source: "./"
+        target: "/var/otenkisan/"
+      - type: bind
+        source: "./conf.d/nginx.conf"
+        target: "/etc/nginx/conf.d/nginx.conf"
+    restart: always

@@ -1,0 +1,21 @@
+# ビルド環境
+FROM node:latest as build-stage
+WORKDIR /app
+COPY package.json ./
+RUN npm install
+COPY . .
+RUN npm run build
+
+# 本番環境
+FROM nginx:latest as production-stage
+
+RUN mkdir /usr/share/nginx/html/otenkisan
+COPY --from=build-stage /app/dist /usr/share/nginx/html/otenkisan
+
+RUN rm -rf /usr/share/nginx/html/otenkisan/json
+RUN rm -rf /usr/share/nginx/html/otenkisan/images
+
+WORKDIR /usr/share/nginx/html/otenkisan/
+RUN ln -s /var/otenkisan/public/json json
+RUN ln -s /var/otenkisan/public/images images
+WORKDIR /var/otenkisan
