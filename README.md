@@ -57,7 +57,7 @@ nodeとかのインストールとか。
 
 my-cronは任意の名前でよい。以下を記載して保存。  
 ```
-5 * * * * root [path_to]/otenkisan/backend/run.sh >> [path_to]/cron/otenkisan_cron.log 2>&1
+*/5 * * * * root [path_to]/otenkisan/backend/run.sh >> [path_to]/cron/otenkisan_cron.log 2>&1
 ```
 [path_to]箇所は、環境によって置き換え。  
 「>>」以降はログ出力場所なので、どこでもいい。  
