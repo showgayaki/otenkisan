@@ -97,6 +97,7 @@ export default defineComponent({
     @media screen and (min-width: 576px){
     }
     @media screen and (min-width: 960px){
+        margin-bottom: 0;
         &__table,
         &__table-header,
         &__table-data{

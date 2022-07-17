@@ -202,10 +202,10 @@ export default defineComponent({
         font-size: 16px;
     }
     .fc-event-title{
-        font-size: .9em;
+        font-size: .8em;
     }
     .fc-daygrid-day{
-        height: 3em;
+        height: 2.7em;
         font-size: 18px;
     }
 }

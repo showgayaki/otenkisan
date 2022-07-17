@@ -104,7 +104,7 @@ export default defineComponent({
 <style lang="scss">
 .weather-forecast{
     width: 100%;
-    margin: 0 20px 20px 0;
+    margin: 0 20px 25px 0;
     &__error{
         font-size: 16px;
         text-align: center;
@@ -115,7 +115,7 @@ export default defineComponent({
     &__forecast{
         display: flex;
         justify-content: center;
-        align-items: flex-end;
+        align-items: center;
         margin-bottom: 10px;
         font-size: 16px;
     }
@@ -181,14 +181,17 @@ export default defineComponent({
             font-size: 24px;
         }
         &__forecast{
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             font-size: 27px;
         }
         &__sky-pattern{
             margin: 0 20px 0 0;
         }
         &__icon{
-            width: 120px;
+            width: 180px;
+        }
+        &__state{
+            margin-top: -15px;
         }
         &__temp-text{
             width: 3em;

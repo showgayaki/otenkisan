@@ -82,7 +82,7 @@ html{
         padding: 15px;
     }
     @media screen and (min-width: 960px){
-        padding: 30px;
+        padding: 20px;
     }
 }
 .weather-calendar{
