@@ -12,30 +12,21 @@ import '@fullcalendar/core/vdom';
 import FullCalendar, { DayCellContentArg, EventContentArg } from '@fullcalendar/vue3';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import ApiService from '@/services/ApiService';
-import ResponseData from '@/types/ResponseData';
-import Holidays from '@/types/Holidays';
 
 export default defineComponent({
     name: 'MonthlyCalendar',
     props: [
         'datetime',
+        'holidaysDate',
     ],
     components: {
         FullCalendar,
     },
     data(){
         return {
-            holidaysDate: {} as Holidays,
             lastDay: '',
             refresh: false,
-            loading: true,
-            errored: false,
-            errorText: '',
         }
-    },
-    mounted: function(){
-        this.fetchHolidaysDate();
     },
     computed: {
         checkDate(){
@@ -49,20 +40,6 @@ export default defineComponent({
         }
     },
     methods: {
-        fetchHolidaysDate(){
-            ApiService.getAll('holiday.json')
-            .then((res: ResponseData) => {
-                this.errored = false;
-                this.holidaysDate = res.data;
-                console.log(res.data);
-            })
-            .catch(error => {
-                console.log(error);
-                this.errored = true;
-                this.errorText = error;
-            })
-            .finally(() => this.loading = false)
-        },
         getHoliday(holidaysDate: {[index: string]: string}){
             let events = [];
             let holidays: string[] = Object.keys(holidaysDate);

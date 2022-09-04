@@ -1,6 +1,16 @@
 <template>
     <div class="datetime-now">
-        <h1 class="datetime-now__date">{{ currentDate }}</h1>
+        <h1 class="datetime-now__date date" v-if="Object.keys(currentDate).length">
+            <span class="date__year">{{ currentDate.year }}年</span>
+            <span class="date__month">{{ currentDate.month }}月</span>
+            <span class="date__date">{{ currentDate.date }}日</span>
+            <span class="date__day date__day--holiday" v-if="currentDate.isHoliday">{{ currentDate.day }}</span>
+            <span class="date__day date__day--saturday" v-else-if="currentDate.isSaturday">{{ currentDate.day }}</span>
+            <span class="date__day" v-else>{{ currentDate.day }}</span>
+        </h1>
+        <h1 class="datetime-now__date" v-else>
+            Datetime
+        </h1>
         <p class="datetime-now__clock">
             <span v-for="time in currentTime" :key="time" class="datetime-now__time">{{ time }}</span>
         </p>
@@ -12,46 +22,10 @@ import { defineComponent } from 'vue';
 
 export default defineComponent({
     name: 'DatetimeNow',
-    data(){
-        return{
-            currentDate: 'Datetime',
-            currentTime: ['Loading...'],
-            week: ['(日)', '(月)', '(火)', '(水)', '(木)',  '(金)', '(土)'],
-        }
-    },
-    mounted: function(){
-        let timerId = setInterval(this.getDatetimeNow, 1000);
-    },
-    methods: {
-        getDatetimeNow(){
-            const now: Date = new Date;
-            const year = String(now.getFullYear());
-            const month = String(now.getMonth() + 1);
-            const date = String(now.getDate());
-            const day = this.week[now.getDay()];
-
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-
-            this.currentDate = year + '年' + month + '月' + date + '日' + day;
-            this.currentTime = [hours, minutes, seconds];
-
-            // 親コンポーネントに日時を渡す
-            this.$emit(
-                'fetchTime',
-                {
-                    'year': year,
-                    'month': month,
-                    'date': date,
-                    'day': day,
-                    'hours': hours,
-                    'minutes': minutes,
-                    'seconds': seconds
-                }
-            );
-        }
-    }
+    props: [
+        'currentDate',
+        'currentTime'
+    ],
 });
 </script>
 
@@ -97,6 +71,24 @@ export default defineComponent({
                 content: ":";
                 display: inline-block;
             }
+        }
+    }
+}
+.date{
+    &__day{
+        &::before{
+            content: "(";
+            color: #fff;
+        }
+        &::after{
+            content: ")";
+            color: #fff;
+        }
+        &--holiday{
+            color: #f00;
+        }
+        &--saturday{
+            color: #00f;
         }
     }
 }

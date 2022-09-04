@@ -1,12 +1,12 @@
 <template>
     <div class="container">
-        <DatetimeNow @fetchTime="emitTime" />
+        <DatetimeNow :currentDate="currentDate" :currentTime="currentTime" />
         <div class="weather-calendar">
             <div class="weather-calendar__forecast-temp">
                 <WeatherForecast :minutes="datetime['minutes']" :seconds="datetime['seconds']" />
                 <SwitchBot :seconds="datetime['seconds']" />
             </div>
-            <MonthlyCalendar :datetime="datetime"/>
+            <MonthlyCalendar :datetime="datetime" :holidaysDate="holidaysDate"/>
         </div>
     </div>
 </template>
@@ -18,6 +18,9 @@ import DatetimeNow from '@/components/DatetimeNow.vue';
 import WeatherForecast from '@/components/WeatherForecast.vue';
 import MonthlyCalendar from '@/components/MonthlyCalendar.vue';
 import SwitchBot from '@/components/SwitchBot.vue';
+import ApiService from '@/services/ApiService';
+import ResponseData from '@/types/ResponseData';
+import Holidays from '@/types/Holidays';
 
 export default defineComponent({
     name: 'App',
@@ -37,20 +40,64 @@ export default defineComponent({
                 hours: '',
                 minutes: '',
                 seconds: '',
+                isSaturday: false,
+                isHoliday: false,
             },
+            currentDate: {},
+            currentTime: ['Loading...'],
+            week: ['日', '月', '火', '水', '木', '金', '土'],
+            holidaysDate: {} as Holidays,
+            loading: true,
+            errored: false,
+            errorText: '',
         };
     },
+    mounted: function(){
+        this.fetchHolidaysDate();
+        let timerId = setInterval(this.getDatetimeNow, 1000);
+    },
     methods: {
-        // DatetimeNowコンポーネントから日時を受け取り
-        emitTime(datetime: {[index: string]: string}) {
-            this.datetime['year'] = datetime['year'];
-            this.datetime['month'] = datetime['month'];
-            this.datetime['date'] = datetime['date'];
-            this.datetime['day'] = datetime['day'];
-            this.datetime['hours'] = datetime['hours'];
-            this.datetime['minutes'] = datetime['minutes'];
-            this.datetime['seconds'] = datetime['seconds'];
-        }
+        // 現在時刻取得
+        getDatetimeNow(){
+            const now: Date = new Date;
+            this.datetime['year'] = String(now.getFullYear());
+            this.datetime['month'] = String(now.getMonth() + 1);
+            this.datetime['date'] = String(now.getDate());
+            this.datetime['day'] = this.week[now.getDay()];
+            this.datetime['hours'] = String(now.getHours()).padStart(2, '0');
+            this.datetime['minutes'] = String(now.getMinutes()).padStart(2, '0');
+            this.datetime['seconds'] = String(now.getSeconds()).padStart(2, '0');
+            this.datetime['isSaturday'] = (now.getDay() == 6)? true: false;
+
+            // 2022-01-01の形にして比較、日曜 or 祝日かどうか判定
+            let dateNow = this.datetime['year'] + '-' + this.datetime['month'] + '-' + this.datetime['date'];
+            this.datetime['isHoliday'] = (now.getDay() == 0 || dateNow in this.holidaysDate)? true: false;
+
+            this.currentDate = {
+                'year': this.datetime['year'],
+                'month': this.datetime['month'],
+                'date': this.datetime['date'],
+                'day': this.datetime['day'],
+                'isHoliday': this.datetime['isHoliday'],
+                'isSaturday': this.datetime['isSaturday'],
+            };
+            this.currentTime = [this.datetime['hours'], this.datetime['minutes'], this.datetime['seconds']];
+        },
+        // 祝日情報取得
+        fetchHolidaysDate(){
+            ApiService.getAll('holiday.json')
+            .then((res: ResponseData) => {
+                this.errored = false;
+                this.holidaysDate = res.data;
+                console.log(res.data);
+            })
+            .catch(error => {
+                console.log(error);
+                this.errored = true;
+                this.errorText = error;
+            })
+            .finally(() => this.loading = false)
+        },
     }
 });
 </script>

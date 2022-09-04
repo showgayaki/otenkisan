@@ -20,9 +20,33 @@
 `git clone https://github.com/showgayaki/otenkisan.git`  
 `cd otenkisan`  
 
+#### .evn.local準備
+.env.sampleを.env.localにリネーム。  
+- TARGET_URL  
+  天気情報を取得したいURL(市区町村のページ)  
+  ※.env.sampleに記載されているURLは、品川区のURL
+- TARGET_ATTRTARGET_ATTR  
+  TARGET_URLページの当日の天気情報箇所のclass名(基本変更しない)
+- VUE_APP_FETCH_API_MINUTES  
+  jsonから、天気情報を何分(00秒)に取得するかの設定。1時間に一回を想定。後述のcron設定を考慮する必要あり。  
 
 
-### npm
+
+### Dockerの場合
+#### 初回
+`docker-compose up -d`  
+
+#### 更新時
+`docker-compose down && docker-compose build --no-cache && docker-compose up -d`  
+
+#### cron設定
+`sudo vi /etc/cron.d/my-cron`  
+```
+*/5 * * * * root /usr/bin/docker exec -i otenkisan-backend python /var/otenkisan/backend/otenkisan/core.py >> [path_to]/otenkisant_cron.log
+```
+
+### Dockerじゃない場合
+#### npm
 nodeとかのインストールとか。  
 参考：https://qiita.com/seibe/items/36cef7df85fe2cefa3ea  
 
@@ -35,13 +59,13 @@ nodeとかのインストールとか。
 `npm install`  
 
 
-### python
+#### python
 `python3 -m venv .venv`  
 `source .venv/bin/activate`  
 `pip install -r requirements.txt`  
 
 
-### .evn.local準備
+#### .evn.local準備
 .env.sampleを.env.localにリネーム。  
 - TARGET_URL  
   天気情報を取得したいURL(市区町村のページ)  
@@ -51,31 +75,13 @@ nodeとかのインストールとか。
 - VUE_APP_FETCH_API_MINUTES  
   jsonから、天気情報を何分(00秒)に取得するかの設定。1時間に一回を想定。後述のcron設定を考慮する必要あり。  
 
-
-###　 cron設定
-`sudo vi /etc/cron.d/my-cron`  
-
-my-cronは任意の名前でよい。以下を記載して保存。  
-```
-*/5 * * * * root [path_to]/otenkisan/backend/run.sh >> [path_to]/cron/otenkisan_cron.log 2>&1
-```
-[path_to]箇所は、環境によって置き換え。  
-「>>」以降はログ出力場所なので、どこでもいい。  
-
-上記だと毎時５分に実行。  
-[.evn.local準備](#.evn.local準備)で設定した、VUE_APP_FETCH_API_MINUTESの直前に実行されるようにするとよい。  
-
-1. tenki.jpから天気情報取得してjsonに保存
-2. 保存したjsonから情報取得
-の流れ。  
-
-### Compiles and hot-reloads for development
+#### Compiles and hot-reloads for development
 `npm run serve`  
 
-### Compiles and minifies for production
+#### Compiles and minifies for production
 `npm run build`  
 
-## nginx設定
+#### nginx設定
 `sudo apt install nginx -y`  
 
 `sudo vi /etc/nginx/conf.d/otenkisan.conf`  
@@ -105,3 +111,22 @@ server {
 
 設定反映  
 `sudo nginx -s reload`　 
+
+
+#### cron設定
+`sudo vi /etc/cron.d/my-cron`  
+
+my-cronは任意の名前でよい。以下を記載して保存。  
+```
+*/5 * * * * root [path_to]/otenkisan/backend/run.sh >> [path_to]/cron/otenkisan_cron.log 2>&1
+```
+
+[path_to]箇所は、環境によって置き換え。  
+「>>」以降はログ出力場所なので、どこでもいい。  
+
+上記だと毎時５分に実行。  
+[.evn.local準備](#.evn.local準備)で設定した、VUE_APP_FETCH_API_MINUTESの直前に実行されるようにするとよい。  
+
+1. 天気予報 APIから天気情報取得してjsonに保存
+2. 保存したjsonから情報取得
+の流れ。  
