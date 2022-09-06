@@ -1,12 +1,13 @@
 <template>
     <div class="datetime-now">
-        <h1 class="datetime-now__date date" v-if="Object.keys(currentDate).length">
-            <span class="date__year">{{ currentDate.year }}年</span>
-            <span class="date__month">{{ currentDate.month }}月</span>
-            <span class="date__date">{{ currentDate.date }}日</span>
-            <span class="date__day date__day--holiday" v-if="currentDate.isHoliday">{{ currentDate.day }}</span>
-            <span class="date__day date__day--saturday" v-else-if="currentDate.isSaturday">{{ currentDate.day }}</span>
-            <span class="date__day" v-else>{{ currentDate.day }}</span>
+        <h1 class="datetime-now__date date" v-if="Object.keys(datetime).length">
+            <span class="date__year">{{ datetime.year }}年</span>
+            <span class="date__month">{{ datetime.month }}月</span>
+            <span class="date__date">{{ datetime.date }}日</span>
+            <span class="date__day date__day--holiday" v-if="datetime.isHoliday">{{ datetime.day }}</span>
+            <span class="date__day date__day--saturday" v-else-if="datetime.isSaturday">{{ datetime.day }}</span>
+            <span class="date__day" v-else>{{ datetime.day }}</span>
+            <span class="date__day date__day--checktime">{{ checkTime }}</span>
         </h1>
         <h1 class="datetime-now__date" v-else>
             Datetime
@@ -15,17 +16,100 @@
             <span v-for="time in currentTime" :key="time" class="datetime-now__time">{{ time }}</span>
         </p>
     </div>
+    <div class="weather-calendar">
+        <div class="weather-calendar__forecast-temp">
+            <WeatherForecast :minutes="datetime['minutes']" :seconds="datetime['seconds']" />
+            <SwitchBot :seconds="datetime['seconds']" />
+        </div>
+        <MonthlyCalendar :datetime="datetime" :holidaysDate="holidaysDate"/>
+    </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import WeatherForecast from '@/components/WeatherForecast.vue';
+import MonthlyCalendar from '@/components/MonthlyCalendar.vue';
+import SwitchBot from '@/components/SwitchBot.vue';
+import ApiService from '@/services/ApiService';
+import ResponseData from '@/types/ResponseData';
+import Holidays from '@/types/Holidays';
 
 export default defineComponent({
     name: 'DatetimeNow',
-    props: [
-        'currentDate',
-        'currentTime'
-    ],
+    components: {
+        WeatherForecast,
+        MonthlyCalendar,
+        SwitchBot,
+    },
+    data() {
+        return {
+            datetime: {
+                year: '',
+                month: '',
+                date: '',
+                day: '',
+                hours: '',
+                minutes: '',
+                seconds: '',
+                isSaturday: false,
+                isHoliday: false,
+            },
+            currentTime: ['Loading...'],
+            week: ['日', '月', '火', '水', '木', '金', '土'],
+            holidaysDate: {} as Holidays,
+            loading: true,
+            errored: false,
+            errorText: '',
+        };
+    },
+    mounted: function(){
+        this.fetchHolidaysDate();
+        let timerId = setInterval(this.updateTimer, 1000);
+    },
+    computed: {
+        checkTime(){
+            // 稼働が長くなると、秒数の描画が１秒ごとじゃなくなってしまうので1時間に一回リロード
+            if(this.datetime['minutes'] == '00' && this.datetime['seconds'] == '03'){
+                location.reload();
+            }
+            return false;
+        }
+    },
+    methods: {
+        // 現在時刻取得
+        updateTimer(){
+            const now: Date = new Date;
+            this.datetime['year'] = String(now.getFullYear());
+            this.datetime['month'] = String(now.getMonth() + 1);
+            this.datetime['date'] = String(now.getDate());
+            this.datetime['day'] = this.week[now.getDay()];
+            this.datetime['hours'] = String(now.getHours()).padStart(2, '0');
+            this.datetime['minutes'] = String(now.getMinutes()).padStart(2, '0');
+            this.datetime['seconds'] = String(now.getSeconds()).padStart(2, '0');
+            this.datetime['isSaturday'] = (now.getDay() == 6)? true: false;
+
+            // 2022-01-01の形にして比較、日曜 or 祝日かどうか判定
+            let dateNow = this.datetime['year'] + '-' + this.datetime['month'] + '-' + this.datetime['date'];
+            this.datetime['isHoliday'] = (now.getDay() == 0 || dateNow in this.holidaysDate)? true: false;
+
+            this.currentTime = [this.datetime['hours'], this.datetime['minutes'], this.datetime['seconds']];
+        },
+        // 祝日情報取得
+        fetchHolidaysDate(){
+            ApiService.getAll('holiday.json')
+            .then((res: ResponseData) => {
+                this.errored = false;
+                this.holidaysDate = res.data;
+                console.log(res.data);
+            })
+            .catch(error => {
+                console.log(error);
+                this.errored = true;
+                this.errorText = error;
+            })
+            .finally(() => this.loading = false)
+        },
+    },
 });
 </script>
 
@@ -89,6 +173,22 @@ export default defineComponent({
         }
         &--saturday{
             color: #00f;
+        }
+        &--checktime{
+            display: none;
+        }
+    }
+}
+.weather-calendar{
+    display: block;
+    &__forecast-temp{
+        width: 100%;
+    }
+    @media screen and (min-width: 576px){
+        display: flex;
+        justify-content: space-between;
+        &__forecast-temp{
+            width: calc(50% - 15px);
         }
     }
 }

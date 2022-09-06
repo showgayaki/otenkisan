@@ -1,7 +1,6 @@
 
 <template>
     <div class="monthly-calendar">
-        <p class="monthly-calendar__date">{{ checkDate }}</p>
         <FullCalendar ref="calendar" :options="calendarOptions()" />
     </div>
 </template>
@@ -22,23 +21,6 @@ export default defineComponent({
     components: {
         FullCalendar,
     },
-    data(){
-        return {
-            lastDay: '',
-            refresh: false,
-        }
-    },
-    computed: {
-        checkDate(){
-            // 月が変わったら(日付が前回より小さくなったら)リフレッシュ
-            if(Number(this.datetime['date']) < Number(this.lastDay)){
-                // (this.$refs.calendar as InstanceType<typeof FullCalendar>).$emit('refetchEvents');
-                location.reload();
-            }
-            this.updateDate(this.datetime['date']);
-            return this.datetime;
-        }
-    },
     methods: {
         getHoliday(holidaysDate: {[index: string]: string}){
             let events = [];
@@ -53,9 +35,6 @@ export default defineComponent({
                 events.push(holiday);
             }
             return events;
-        },
-        updateDate(dateNow: string){
-            this.lastDay = dateNow;
         },
         calendarOptions(){
             let options = {
