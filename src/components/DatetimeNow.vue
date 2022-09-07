@@ -1,6 +1,6 @@
 <template>
     <div class="datetime-now">
-        <h1 class="datetime-now__date date" v-if="Object.keys(datetime).length">
+        <h1 class="datetime-now__date date" v-if="!(datetime.year == '')">
             <span class="date__year">{{ datetime.year }}年</span>
             <span class="date__month">{{ datetime.month }}月</span>
             <span class="date__date">{{ datetime.date }}日</span>
