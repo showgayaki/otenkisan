@@ -172,7 +172,7 @@ export default defineComponent({
             color: #f00;
         }
         &--saturday{
-            color: #00f;
+            color: #0b8fdb;
         }
         &--checktime{
             display: none;

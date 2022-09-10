@@ -116,7 +116,7 @@ export default defineComponent({
 }
 .fc-day-sat .fc-col-header-cell-cushion,
 .fc-day-sat .fc-daygrid-day-number{
-    color: #00f;
+    color: #0b8fdb;
 }
 .fc-day-sun .fc-col-header-cell-cushion,
 .fc-day-sun .fc-daygrid-day-number,
