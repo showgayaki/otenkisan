@@ -28,7 +28,7 @@
             </thead>
             <tbody>
                 <tr>
-                    <td v-for="percent in weatherForecast['rainy_percent']" :key="percent" class="weather-forecast__table-data">{{ percent }}</td>
+                    <td v-for="(percent, index) in weatherForecast['rainy_percent']" v-bind:key="index" class="weather-forecast__table-data">{{ percent }}</td>
                 </tr>
             </tbody>
         </table>

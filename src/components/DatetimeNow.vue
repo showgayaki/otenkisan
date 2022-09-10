@@ -79,18 +79,27 @@ export default defineComponent({
         // 現在時刻取得
         updateTimer(){
             const now: Date = new Date;
+            let day = now.getDay();
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+            let seconds = now.getSeconds();
+
+            // ページ表示時(currentTimeが「Loading...」)か、0時0秒〜0時5秒の間で曜日判定
+            if(this.currentTime[0] == 'Loading...' || (hours == 0 && minutes == 0 && seconds < 5)){
+                this.datetime['isSaturday'] = (day == 6)? true: false;
+                // 2022-01-01の形にして比較、日曜 or 祝日かどうか判定
+                let dateNow = this.datetime['year'] + '-' + this.datetime['month'] + '-' + this.datetime['date'];
+                this.datetime['isHoliday'] = (day == 0 || dateNow in this.holidaysDate)? true: false;
+            }
+
             this.datetime['year'] = String(now.getFullYear());
             this.datetime['month'] = String(now.getMonth() + 1);
             this.datetime['date'] = String(now.getDate());
             this.datetime['day'] = this.week[now.getDay()];
-            this.datetime['hours'] = String(now.getHours()).padStart(2, '0');
-            this.datetime['minutes'] = String(now.getMinutes()).padStart(2, '0');
-            this.datetime['seconds'] = String(now.getSeconds()).padStart(2, '0');
-            this.datetime['isSaturday'] = (now.getDay() == 6)? true: false;
-
-            // 2022-01-01の形にして比較、日曜 or 祝日かどうか判定
-            let dateNow = this.datetime['year'] + '-' + this.datetime['month'] + '-' + this.datetime['date'];
-            this.datetime['isHoliday'] = (now.getDay() == 0 || dateNow in this.holidaysDate)? true: false;
+            // 時間・分・秒は、0埋め
+            this.datetime['hours'] = String(hours).padStart(2, '0');
+            this.datetime['minutes'] = String(minutes).padStart(2, '0');
+            this.datetime['seconds'] = String(seconds).padStart(2, '0');
 
             this.currentTime = [this.datetime['hours'], this.datetime['minutes'], this.datetime['seconds']];
         },
