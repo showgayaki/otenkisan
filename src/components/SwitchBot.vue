@@ -2,7 +2,7 @@
     <div class="switchbot">
         <p v-if="errored" class="switchbot__error">{{ errorText }}</p>
         <p class="switchbot__check-time">{{ checkTime }}</p>
-        <table class="switchbot__table">
+        <table v-if="!('error' in switchBot)" class="switchbot__table">
             <thead>
                 <tr>
                     <th v-for="header in switchbotHeader" :key="header" class="switchbot__table-header">{{ header }}</th>
@@ -11,6 +11,18 @@
             <tbody>
                 <tr>
                     <td v-for="sbData in switchBot" :key="sbData" class="switchbot__table-data">{{ sbData }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <table v-else class="switchbot__table">
+            <thead>
+                <tr>
+                    <th class="switchbot__table-header">エラー</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="switchbot__table-data switchbot__table-data--error">{{ switchBot.error }}</td>
                 </tr>
             </tbody>
         </table>
@@ -31,10 +43,7 @@ export default defineComponent({
     data() {
         return{
             switchbotHeader: ['室温', '湿度'],
-            switchBot: {
-                'temperature': '---',
-                'humidity': '---',
-            } as SwitchBot,
+            switchBot: {} as SwitchBot,
             loading: true,
             errored: false,
             errorText: '',
@@ -56,9 +65,11 @@ export default defineComponent({
         fetchSwitchbotData(){
             ApiService.getAll('switchbot.json')
             .then((res: ResponseData) => {
-                res.data['temperature'] = String(res.data['temperature']) + '℃';
-                res.data['humidity'] = String(res.data['humidity']) + '%';
-                this.errored = false;
+                if(!('error' in res.data)){
+                    res.data['temperature'] = String(res.data['temperature']) + '℃';
+                    res.data['humidity'] = String(res.data['humidity']) + '%';
+                    this.errored = false;
+                }
                 this.switchBot = res.data;
                 console.log(res.data);
             })
@@ -81,6 +92,7 @@ export default defineComponent({
     }
     &__table{
         width: 100%;
+        table-layout: fixed;
     }
     &__table,
     &__table-header,
@@ -91,8 +103,12 @@ export default defineComponent({
     &__table-header,
     &__table-data{
         width: calc(100% / 4);
-        padding: 6px 0;
+        padding: 6px;
         text-align: center;
+        &--error{
+            white-space: nowrap;
+            overflow: auto;
+        }
     }
     @media screen and (min-width: 576px){
     }

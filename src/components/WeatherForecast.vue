@@ -4,7 +4,7 @@
         <p class="weather-forecast__check-time">{{ checkTime }}</p>
         <div class="weather-forecast__forecast">
             <div class="weather-forecast__sky-pattern">
-                <img v-bind:src="weatherForecast['icon']" class="weather-forecast__icon" alt="天気アイコン">
+                <img :src="weatherForecast['icon']" class="weather-forecast__icon" alt="天気アイコン">
                 <p class="weather-forecast__state">{{ weatherForecast['state'] }}</p>
             </div>
             <div class="weather-forecast__temp-wrap">
@@ -28,7 +28,7 @@
             </thead>
             <tbody>
                 <tr>
-                    <td v-for="(percent, index) in weatherForecast['rainy_percent']" v-bind:key="index" class="weather-forecast__table-data">{{ percent }}</td>
+                    <td v-for="(percent, index) in weatherForecast['rainy_percent']" :key="index" class="weather-forecast__table-data">{{ percent }}</td>
                 </tr>
             </tbody>
         </table>
