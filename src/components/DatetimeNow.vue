@@ -79,10 +79,19 @@ export default defineComponent({
         // 現在時刻取得
         updateTimer(){
             const now: Date = new Date;
+            let year = now.getFullYear();
+            let month = now.getMonth() + 1;
+            let date = now.getDate();
             let day = now.getDay();
             let hours = now.getHours();
             let minutes = now.getMinutes();
             let seconds = now.getSeconds();
+
+            // 月・日付は0埋め
+            this.datetime['year'] = String(year);
+            this.datetime['month'] = String(month).padStart(2, '0');
+            this.datetime['date'] = String(date).padStart(2, '0');
+            this.datetime['day'] = this.week[now.getDay()];
 
             // ページ表示時(currentTimeが「Loading...」)か、0時0秒〜0時5秒の間で曜日判定
             if(this.currentTime[0] == 'Loading...' || (hours == 0 && minutes == 0 && seconds < 5)){
@@ -92,10 +101,6 @@ export default defineComponent({
                 this.datetime['isHoliday'] = (day == 0 || dateNow in this.holidaysDate)? true: false;
             }
 
-            this.datetime['year'] = String(now.getFullYear());
-            this.datetime['month'] = String(now.getMonth() + 1);
-            this.datetime['date'] = String(now.getDate());
-            this.datetime['day'] = this.week[now.getDay()];
             // 時間・分・秒は、0埋め
             this.datetime['hours'] = String(hours).padStart(2, '0');
             this.datetime['minutes'] = String(minutes).padStart(2, '0');
