@@ -1,21 +1,23 @@
 version: "3"
 services:
-  otenkisan-backend:
+  otenkisan_backend:
     build:
-        context: .
-        dockerfile: ./Dockerfile-backend
-    container_name: otenkisan-backend
+      context: .
+      dockerfile: ./Dockerfile_backend
+    image: otenkisan_backend
+    container_name: otenkisan_backend
     volumes:
       - type: bind
         source: "./"
         target: "/var/otenkisan/"
     restart: always
     tty: true
-  otenkisan-frontend:
+  otenkisan_frontend:
     build:
-        context: .
-        dockerfile: ./Dockerfile-frontend
-    container_name: otenkisan-frontend
+      context: .
+      dockerfile: ./Dockerfile_frontend
+    image: otenkisan_frontend
+    container_name: otenkisan_frontend
     ports:
       - "8003:80"
     volumes:

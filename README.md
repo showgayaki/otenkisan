@@ -42,7 +42,7 @@
 #### cron設定
 `sudo vi /etc/cron.d/my-cron`  
 ```
-*/5 * * * * root /usr/bin/docker exec -i otenkisan-backend python /var/otenkisan/backend/otenkisan/core.py >> [path_to]/otenkisant_cron.log
+*/5 * * * * root /usr/bin/docker exec -i otenkisan_backend python /var/otenkisan/backend/otenkisan/core.py >> [path_to]/otenkisant_cron.log
 ```
 
 ### Dockerじゃない場合
