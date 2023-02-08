@@ -13,7 +13,7 @@ ENV LC_ALL ja_JP.UTF-8
 ENV TERM xterm
 ENV TZ JST-9
 
-WORKDIR /var/otenkisan
-COPY requirements.txt ./
+WORKDIR /var/otenkisan/backend
+COPY . .
 RUN pip install --upgrade pip setuptools \
 && pip install -r requirements.txt
