@@ -1,6 +1,4 @@
 node_modules
-conf.d
 .env.sample
 **/json
 **/log
-backend/

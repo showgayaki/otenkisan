@@ -1,17 +1,24 @@
 version: "3"
 services:
   otenkisan_backend:
-    build: ./backend
+    build:
+      context: .
+      dockerfile: ./backend/Dockerfile
     image: otenkisan_backend
     container_name: otenkisan_backend
     volumes:
       - type: bind
         source: "./backend"
         target: "/var/otenkisan/backend"
+      - type: bind
+        source: "./public"
+        target: "/var/otenkisan/public"
     restart: always
     tty: true
   otenkisan_frontend:
-    build: ./
+    build:
+      context: .
+      dockerfile: ./Dockerfile
     image: otenkisan_frontend
     container_name: otenkisan_frontend
     ports:
@@ -20,7 +27,4 @@ services:
       - type: bind
         source: "./public"
         target: "/var/otenkisan/public"
-      - type: bind
-        source: "./conf.d/nginx.conf"
-        target: "/etc/nginx/conf.d/nginx.conf"
     restart: always

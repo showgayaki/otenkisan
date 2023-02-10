@@ -14,6 +14,7 @@ FROM nginx:alpine-slim as production-stage
 RUN apk update \
 && mkdir /usr/share/nginx/html/otenkisan
 COPY --from=build-stage /app/dist /usr/share/nginx/html/otenkisan
+COPY ./conf.d/nginx.conf /etc/nginx/conf.d/nginx.conf
 
 RUN rm -rf /usr/share/nginx/html/otenkisan/json \
 && rm -rf /usr/share/nginx/html/otenkisan/images
