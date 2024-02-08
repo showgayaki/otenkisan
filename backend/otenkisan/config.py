@@ -12,9 +12,10 @@ class Config:
         load_dotenv(dotenv_path)
         conf = {
             'app_name': 'otenkisan',
-            'forecast_api_url': os.environ.get('FORECAST_API_URL'),
-            'forecast_acquisition_minute': os.environ.get('FORECAST_ACQUISITION_MINUTE'),
-            'switchbot_api_url': os.environ.get('SWITCHBOT_API_URL'),
-            'switchbot_access_token': os.environ.get('SWITCHBOT_ACCESS_TOKEN'),
+            'forecast_api_url': os.getenv('FORECAST_API_URL'),
+            'forecast_acquisition_minute': os.getenv('FORECAST_ACQUISITION_MINUTE'),
+            'switchbot_api_url': os.getenv('SWITCHBOT_API_URL'),
+            'switchbot_access_token': os.getenv('SWITCHBOT_ACCESS_TOKEN'),
+            'holiday_url': os.getenv('HOLIDAY_URL'),
         }
         return conf

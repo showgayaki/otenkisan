@@ -53,7 +53,8 @@ class WeatherForecast:
             res = requests.get(src_url, headers=self.USER_AGENT, timeout=self.TIME_OUT)
             image = res.content
             # imagesフォルダなかったら作成
-            if not image_dir.is_dir(): Path.mkdir(image_dir)
+            if not image_dir.is_dir():
+                Path.mkdir(image_dir)
             # 画像保存
             with open(image_file_path, 'wb') as f:
                 f.write(image)

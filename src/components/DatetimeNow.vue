@@ -67,7 +67,7 @@ export default defineComponent({
         let timerId = setInterval(this.updateTimer, 1000);
     },
     computed: {
-        checkTime(){
+        checkTime(): boolean{
             // 稼働が長くなると、秒数の描画が１秒ごとじゃなくなってしまうので1時間に一回リロード
             if(this.datetime['minutes'] == '00' && this.datetime['seconds'] == '03'){
                 location.reload();

@@ -73,7 +73,7 @@ export default defineComponent({
         this.fetchWeatherForecast();
     },
     computed: {
-        checkTime(){
+        checkTime(): object{
             // 一時間に一回、指定分に実行
             if(this.minutes == process.env.VUE_APP_FETCH_API_MINUTES && this.seconds == '00'){
                 this.fetchWeatherForecast();

@@ -12,7 +12,8 @@ class Logger:
         dir_name = root_dir.name
         log_dir = Path.joinpath(Path(root_dir).resolve(), 'log')
         # logフォルダ無かったら作成
-        if not log_dir.is_dir(): Path.mkdir(log_dir)
+        if not log_dir.is_dir():
+            Path.mkdir(log_dir)
         filename = '{}/{}.log'.format(log_dir, dir_name)
 
         handler = handlers.RotatingFileHandler(

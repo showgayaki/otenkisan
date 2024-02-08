@@ -53,7 +53,7 @@ export default defineComponent({
         this.fetchSwitchbotData();
     },
     computed: {
-        checkTime(){
+        checkTime(): string{
             // 1分ごとに実行。Switchbotから取得実行@cronが00秒なので、毎分10秒に実行。
             if(this.seconds == '10'){
                 this.fetchSwitchbotData();

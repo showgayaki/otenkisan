@@ -3,6 +3,7 @@ import socket
 from datetime import datetime
 from pathlib import Path
 from config import Config
+from holiday import Holiday
 from weather_forecast import WeatherForecast
 from switchbot import Switchbot
 from logger import Logger
@@ -124,17 +125,26 @@ def fetch_switchbot_data(**kwargs):
 
 
 def main():
-    computer_name = socket.gethostname() # 実行コンピュータ名
-    root_dir = Path(__file__).resolve().parents[1] # backendプロジェクトルート
-    dt_now = datetime.now() # 現在時刻取得
-    now_minutes = dt_now.strftime('%M') # 現在分数取得
-    json_dir = Path(root_dir.parent).joinpath('public/json') # json保存先
-    if not json_dir.is_dir(): Path.mkdir(json_dir) # jsonフォルダ無かったら作成
-    cfg = load_config(root_dir) # 設定読み込み
+    computer_name = socket.gethostname()  # 実行コンピュータ名
+    root_dir = Path(__file__).resolve().parents[1]  # backendプロジェクトルート
+    dt_now = datetime.now()  # 現在時刻取得
+    now_minutes = dt_now.strftime('%M')  # 現在分数取得
+    json_dir = Path(root_dir.parent).joinpath('public/json')  # json保存先
+    if not json_dir.is_dir():
+        Path.mkdir(json_dir)  # jsonフォルダ無かったら作成
+    cfg = load_config(root_dir)  # 設定読み込み
 
     # ログ開始
     log = Logger(root_dir)
     log.logging('info', '===== {} Started on {} ====='.format(cfg['app_name'], computer_name))
+
+    # 祝日の更新チェック
+    holiday = Holiday(json_dir)
+    if not holiday.is_updated_holiday(dt_now):
+        holiday_result = holiday.fetch_holiday(cfg['holiday_url'])
+        log.logging(holiday_result['level'], holiday_result['detail'])
+    else:
+        log.logging('info', 'Holiday data is already updated.')
 
     # 指定分数なら天気予報取得
     if cfg['forecast_acquisition_minute'] == now_minutes:
