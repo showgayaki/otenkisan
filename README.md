@@ -22,28 +22,58 @@
 
 #### .evn.local準備
 .env.sampleを.env.localにリネーム。  
-- TARGET_URL  
-  天気情報を取得したいURL(市区町村のページ)  
-  ※.env.sampleに記載されているURLは、品川区のURL
-- TARGET_ATTRTARGET_ATTR  
-  TARGET_URLページの当日の天気情報箇所のclass名(基本変更しない)
+- FORECAST_API_URL  
+  天気情報を取得したいAPIのURL(.env.sampleに記載されているURLは、東京都のURL)  
+- FORECAST_ACQUISITION_MINUTE  
+  毎時何分に天気予報APIを叩くか
+- SWITCHBOT_API_URL  
+  SwichBotのAPI URL
+- SWITCHBOT_ACCESS_TOKEN  
+  SwichBotのaccess token
 - VUE_APP_FETCH_API_MINUTES  
-  jsonから、天気情報を何分(00秒)に取得するかの設定。1時間に一回を想定。後述のcron設定を考慮する必要あり。  
-
-
+  jsonから、天気情報を何分(00秒)に取得するかの設定。1時間に一回を想定。後述のsystemd timer設定を考慮する必要あり。  
+- HOLIDAY_URL  
+  祝日情報のURL
 
 ### Dockerの場合
 #### 初回
-`docker-compose up -d`  
+`docker compose up -d`  
 
 #### 更新時
-`docker-compose down && docker-compose build --no-cache && docker-compose up -d`  
+`docker compose down && docker compose build --no-cache && docker compose up -d`  
 
-#### cron設定
-`sudo vi /etc/cron.d/my-cron`  
+#### systemd timer設定
+`sudo vi /lib/systemd/system/otenkisan.service`  
 ```
-*/5 * * * * root /usr/bin/docker exec -i otenkisan_backend python /var/otenkisan/backend/otenkisan/core.py >> [path_to]/otenkisant_cron.log
+[Unit]
+Description=otenkisan
+
+[Service]
+Type=simple
+User=[user name]
+ExecStart=/usr/bin/docker exec otenkisan_backend python /var/otenkisan/backend/otenkisan/core.py
+
+[Install]
+WantedBy=multi-user.target
 ```
+
+### timer 
+`sudo vi /lib/systemd/system/otenkisan.timer`  
+```
+[Unit]
+Description=backtan-timer
+
+[Timer]
+OnCalendar=*:0/5
+
+[Install]
+WantedBy=timers.target
+```
+
+`sudo systemctl daemon-reload`  
+`sudo systemctl enable otenkisan.timer`  
+`sudo systemctl start otenkisan.timer`  
+
 
 ### Dockerじゃない場合
 #### npm
