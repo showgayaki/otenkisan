@@ -104,7 +104,7 @@ export default defineComponent({
 <style lang="scss">
 .weather-forecast{
     width: 100%;
-    margin: 0 20px 25px 0;
+    margin-bottom: 15px;
     &__error{
         font-size: 16px;
         text-align: center;
@@ -188,10 +188,7 @@ export default defineComponent({
             margin: 0 20px 0 0;
         }
         &__icon{
-            width: 180px;
-        }
-        &__state{
-            margin-top: -15px;
+            width: 160px;
         }
         &__temp-text{
             width: 3em;
@@ -211,7 +208,6 @@ export default defineComponent({
         &__table-header,
         &__table-data{
             width: calc(100% / 4);
-            padding: 8px 0;
             text-align: center;
         }
     }

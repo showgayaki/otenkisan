@@ -157,8 +157,8 @@ export default defineComponent({
     @media screen and (min-width: 960px){
         margin-bottom: 20px;
         &__date{
-            margin-bottom: 20px;
-            font-size: 70px;
+            margin-bottom: 15px;
+            font-size: 65px;
         }
         &__clock{
             font-size: 150px;
